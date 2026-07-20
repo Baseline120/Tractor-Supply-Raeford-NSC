@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TSC #3300 - Raeford | Internal Project Status</title>
+<style>
+html,body{margin:0;padding:0;background:#363a41;}
+body{font-family:'Archivo',system-ui,sans-serif;color:#e9e7e0;}
+a{color:#e06a2b;text-decoration:none;}
+a:hover{color:#f08548;text-decoration:underline;}
+::selection{background:rgba(184,67,15,0.18);}
+
+/* Internal project-status dashboard system — reusable and print-ready */
+:root{
+  --bdc-ink:#152234;
+  --bdc-red:#bc2026;
+  --bdc-red-dark:#8f171c;
+  --bdc-navy:#102a43;
+  --bdc-slate:#425466;
+  --bdc-paper:#ffffff;
+  --bdc-canvas:#eef1f4;
+  --bdc-rule:#cbd5df;
+  --bdc-muted:#667386;
+  --bdc-soft:#f5f7f9;
+  --bdc-amber:#a96f16;
+  --bdc-green:#237448;
+}
+html,body{background:var(--bdc-canvas);color:var(--bdc-ink);}
+body{font-family:'Archivo',Arial,sans-serif;}
+div[data-screen-label="Weekly Exec Brief"]{background:var(--bdc-paper)!important;}
+div[data-screen-label="Weekly Exec Brief"]>div:nth-child(1){background:var(--bdc-red)!important;}
+div[data-screen-label="Weekly Exec Brief"]>div:nth-child(2){background:var(--bdc-paper);}
+.brand-masthead{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:10px 0 19px;margin-bottom:2px;border-bottom:1px solid var(--bdc-rule);}
+.baseline-logo{display:block;width:auto;height:34px;max-width:310px;object-fit:contain;}
+.brand-report{text-align:right;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.11em;color:var(--bdc-ink);}
+.brand-report strong{display:block;font-size:12px;}
+.brand-report span{display:block;margin-top:5px;font-size:10px;color:var(--bdc-muted);}
+h1{font-family:Georgia,'Times New Roman',serif!important;font-size:48px!important;letter-spacing:-.035em!important;}
+h1 span{font-style:italic;}
+.project-phase{border:1px solid rgba(215,25,32,.32)!important;background:#fff5f5;padding:8px 14px!important;}
+.phase-dot{width:8px!important;height:8px!important;border-radius:50%;background:var(--bdc-red)!important;}
+[style*="color:#e9e7e0"]{color:var(--bdc-ink)!important;}
+[style*="color:#aeaa9e"],[style*="color:#cfccc2"],[style*="color:#93907f"]{color:var(--bdc-muted)!important;}
+[style*="color:#e06a2b"]{color:var(--bdc-red)!important;}
+[style*="background:#e06a2b"]{background:var(--bdc-red)!important;}
+[style*="color:#e2604c"]{color:var(--bdc-red-dark)!important;}
+[style*="background:#e2604c"]{background:var(--bdc-red-dark)!important;}
+[style*="color:#e8b04a"]{color:var(--bdc-amber)!important;}
+[style*="background:#e8b04a"]{background:var(--bdc-amber)!important;}
+[style*="color:#6fbf8c"]{color:var(--bdc-green)!important;}
+[style*="border-top:3px solid #e9e7e0"]{border-top-color:var(--bdc-ink)!important;}
+[style*="border-bottom:2px solid #e9e7e0"],[style*="border-bottom:1px solid #e9e7e0"]{border-bottom-color:var(--bdc-rule)!important;}
+[style*="border:2px solid #e9e7e0"]{border-color:var(--bdc-red)!important;}
+[style*="border-bottom:1px solid #4c515a"],[style*="border-bottom:1px solid #474c54"]{border-bottom-color:var(--bdc-rule)!important;}
+[style*="border-right:1px solid #4c515a"]{border-right-color:var(--bdc-rule)!important;}
+@media (max-width:700px){
+  .brand-masthead{align-items:flex-start;}
+  .brand-lockup{font-size:17px;}
+  .brand-report{display:none;}
+  h1{font-size:38px!important;}
+}
+
+/* Print/PDF: landscape ledger keeps the dashboard legible on a single sheet. */
+@page{size:ledger landscape;margin:.28in;}
+@media print{
+ html,body{width:100%;background:#fff!important;print-color-adjust:exact;-webkit-print-color-adjust:exact;} body{zoom:.90;}
+ div[data-screen-label="Weekly Exec Brief"]{min-height:0!important;}
+ div[data-screen-label="Weekly Exec Brief"]>div:nth-child(2){max-width:none!important;padding:14px 18px 18px!important;}
+ .brand-masthead{padding:5px 0 12px!important;} h1{font-size:37px!important;}
+ [style*="margin-top:44px"]{margin-top:0!important;padding-top:8px!important;}
+ [style*="padding:34px 0 12px"]{padding:22px 0 10px!important;}
+ [style*="padding:26px 0 12px"]{padding:17px 0 10px!important;}
+ [style*="padding:20px"]{padding:13px!important;}
+ [style*="padding:16px 0"]{padding:10px 0!important;}
+ [style*="padding:15px 0"],[style*="padding:14px 0"],[style*="padding:13px 0"]{padding:9px 0!important;}
+ [style*="grid-template-columns:repeat(auto-fit,minmax(490px,1fr))"]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:0 34px!important;}
+ [style*="grid-template-columns:repeat(auto-fit,minmax(185px,1fr))"]{grid-template-columns:repeat(6,minmax(0,1fr))!important;}
+}
+
+</style>
+</head>
+<body>
+<div data-screen-label="Weekly Exec Brief" style="min-height:100vh;background:#363a41;">
+  <div style="height:5px;background:#e06a2b;"></div>
+  <div style="max-width:1240px;margin:0 auto;padding:30px 32px 56px;display:flex;flex-direction:column;gap:0;">
+
+    <div class="brand-masthead">
+      <img class="baseline-logo" src="data:image/png;base64,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" alt="Baseline Development Companies">
+      <div class="brand-report"><strong>Project Status</strong><span>TSC #3300 · Raeford, NC</span></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-end;padding:14px 0 22px;">
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <h1 style="margin:0;font-size:44px;line-height:1;font-weight:800;letter-spacing:-0.02em;color:#e9e7e0;">TSC #3300 <span style="color:#e06a2b;">Raeford</span></h1>
+        <div style="font-size:14.5px;color:#aeaa9e;">752 Laurinburg Rd., Raeford, NC · Tractor Supply Company · ground-up retail</div>
+      </div>
+      <div class="project-phase" style="display:flex;align-items:center;gap:10px;border:2px solid #e9e7e0;padding:8px 16px;">
+        <div class="phase-dot" style="width:9px;height:9px;background:#e06a2b;"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;letter-spacing:0.1em;color:#e9e7e0;">PRE-CONSTRUCTION · BID CLARIFICATION & AWARD</div>
+      </div>
+    </div>
+    <div style="border-top:3px solid #e9e7e0;border-bottom:1px solid #e9e7e0;height:4px;"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));border-bottom:1px solid #4c515a;margin:0 -20px;">
+      <div style="padding:20px;border-right:1px solid #4c515a;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">Construction Start</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#e9e7e0;">08/24/26</div>
+        <div id="days-to-start" style="font-size:12.5px;color:#e06a2b;font-weight:600;">35 days out · holding</div>
+      </div>
+      <div style="padding:20px;border-right:1px solid #4c515a;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">Fixture / CO</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#e9e7e0;">04/04/27</div>
+        <div style="font-size:12.5px;color:#aeaa9e;">Tracked target</div>
+      </div>
+      <div style="padding:20px;border-right:1px solid #4c515a;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">Land Closing</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#e2604c;">TBD</div>
+        <div style="font-size:12.5px;color:#e2604c;font-weight:600;">Gating — see risks</div>
+      </div>
+      <div style="padding:20px;border-right:1px solid #4c515a;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">Building Permit</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#e8b04a;">REVIEW</div>
+        <div style="font-size:12.5px;color:#aeaa9e;">Weekly check · Hoke Co.</div>
+      </div>
+      <div style="padding:20px;border-right:1px solid #4c515a;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">Stormwater COC</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#6fbf8c;">ISSUED</div>
+        <div style="font-size:12.5px;color:#aeaa9e;font-family:'IBM Plex Mono',monospace;">NCC261938 · 07/16</div>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:7px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#aeaa9e;">DOT Bond &amp; Permit</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:#6fbf8c;">IN HAND</div>
+        <div style="font-size:12.5px;color:#aeaa9e;">No open items</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(490px,1fr));gap:0 56px;align-items:start;">
+
+      <div style="display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:baseline;gap:12px;padding:26px 0 12px;border-bottom:2px solid #e9e7e0;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#e06a2b;">01</div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#e9e7e0;">This Week's Priorities</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#e06a2b;font-weight:600;min-width:22px;">1.</div>
+          <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Receive revised GC bids and clarification responses</div>
+            <div style="font-size:13px;color:#aeaa9e;">Bid reviews completed 7/17 · revisions due 7/21</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#e06a2b;white-space:nowrap;">THIS WEEK</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#e06a2b;font-weight:600;min-width:22px;">2.</div>
+          <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Review revisions and finalize GC award recommendation</div>
+            <div style="font-size:13px;color:#aeaa9e;">Compare revisions / selected alternates · award target by 7/29</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#e06a2b;white-space:nowrap;">THIS WEEK</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#e06a2b;font-weight:600;min-width:22px;">3.</div>
+          <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Evaluate and award Special Inspections / CMT services</div>
+            <div style="font-size:13px;color:#aeaa9e;">Proposals remain open · align scope with selected GC and startup schedule</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#e06a2b;white-space:nowrap;">THIS WEEK</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#93907f;font-weight:600;min-width:22px;">4.</div>
+          <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Track building permit progress after land closing</div>
+            <div style="font-size:13px;color:#aeaa9e;">Building permit remains the principal approval item after closing</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#93907f;white-space:nowrap;">RECURRING</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:15px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#93907f;font-weight:600;min-width:22px;">5.</div>
+          <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Stage award and startup documents</div>
+            <div style="font-size:13px;color:#aeaa9e;">Prepare for release immediately after GC selection / award</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#93907f;white-space:nowrap;">QUEUED</div>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:12px;padding:34px 0 12px;border-bottom:2px solid #e9e7e0;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#e06a2b;">02</div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#e9e7e0;">Action Items</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:10px 0 8px;border-bottom:1px solid #e9e7e0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:0.1em;color:#aeaa9e;">
+          <div>ACTION</div><div>DUE</div><div>STATUS</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Receive revised GC bids / clarification responses</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">Tue 07/21</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#e8b04a;">■ IN PROGRESS</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Finalize GC award recommendation</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">07/29</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#93907f;">□ NOT STARTED</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Evaluate Special Inspections / CMT proposals</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">07/29</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#e8b04a;">■ IN PROGRESS</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Track building permit progress after closing</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">After closing</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#93907f;">↻ RECURRING</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Stage award / startup document package</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">Post-award</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#93907f;">□ QUEUED</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(80px,100px) minmax(96px,120px);gap:0 14px;padding:13px 0;border-bottom:1px solid #474c54;font-size:14px;align-items:baseline;">
+          <div style="color:#e9e7e0;min-width:0;">Schedule Duke Energy easement kickoff after closing</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#cfccc2;">Post-closing</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;color:#e2604c;">■ WAITING</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:baseline;gap:12px;padding:26px 0 12px;border-bottom:2px solid #e9e7e0;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#e06a2b;">03</div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#e9e7e0;">Risks &amp; Watch Items</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #474c54;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#e2604c;min-width:44px;padding-top:2px;">HIGH</div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">GC award sequence now controls startup preparation</div>
+            <div style="font-size:13px;color:#aeaa9e;line-height:1.55;">GC bid reviews are complete. Revised bids and clarification responses are due 7/21; award is targeted around or before 7/29. Keep award documents ready so startup can proceed without added delay.</div>
+          </div>
+        </div>
+        <div style="display:contents;">
+        <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #474c54;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#e8b04a;min-width:44px;padding-top:2px;">MED</div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Land closing remains a utility gate</div>
+            <div style="font-size:13px;color:#aeaa9e;line-height:1.55;">Duke Energy easement work cannot proceed until land closing. Pre-stage the meeting request; release it immediately once closing is confirmed.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #474c54;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#e8b04a;min-width:44px;padding-top:2px;">MED</div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:600;color:#e9e7e0;">Building permit remains pending after closing</div>
+            <div style="font-size:13px;color:#aeaa9e;line-height:1.55;">All approvals and bonds are in place except the building permit, which remains dependent on closing. Confirm the permit path and timing promptly once closing is set.</div>
+          </div>
+        </div>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:12px;padding:34px 0 12px;border-bottom:2px solid #e9e7e0;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#e06a2b;">04</div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#e9e7e0;">Decisions Needed</div>
+        </div>
+        <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="width:8px;height:8px;background:#e8b04a;flex-shrink:0;position:relative;top:-1px;"></div>
+          <div style="font-size:14px;color:#e9e7e0;line-height:1.5;flex:1;min-width:0;">GC selection / award — based on revised bids due 7/21; target around or before 7/29</div>
+        </div>
+        <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="width:8px;height:8px;background:#e8b04a;flex-shrink:0;position:relative;top:-1px;"></div>
+          <div style="font-size:14px;color:#e9e7e0;line-height:1.5;flex:1;min-width:0;">Special Inspections / CMT award — align scope and timing with selected GC</div>
+        </div>
+        <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="width:8px;height:8px;background:#e2604c;flex-shrink:0;position:relative;top:-1px;"></div>
+          <div style="font-size:14px;color:#e9e7e0;line-height:1.5;flex:1;min-width:0;">Land closing date — needed to release building permit and Duke easement sequence</div>
+        </div>
+
+        <div style="display:contents;">
+        <div style="display:flex;align-items:baseline;gap:12px;padding:34px 0 12px;border-bottom:2px solid #e9e7e0;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#e06a2b;">05</div>
+          <div style="font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#e9e7e0;">Recent Activity</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e06a2b;min-width:52px;font-weight:600;">Jul 17</div>
+          <div style="font-size:13.5px;color:#cfccc2;line-height:1.5;flex:1;min-width:0;">GC bid reviews completed; revised bids / clarifications requested from Rycon, WIMCO, and DooleyMack</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e06a2b;min-width:52px;font-weight:600;">Jul 16</div>
+          <div style="font-size:13.5px;color:#cfccc2;line-height:1.5;flex:1;min-width:0;">NCDEQ Construction Stormwater COC issued — NCC261938</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e06a2b;min-width:52px;font-weight:600;">Jul 14</div>
+          <div style="font-size:13.5px;color:#cfccc2;line-height:1.5;flex:1;min-width:0;">Schedule II documents sent and approved by email</div>
+        </div>
+        <div style="display:flex;gap:16px;padding:13px 0;border-bottom:1px solid #474c54;align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#93907f;min-width:52px;font-weight:600;">Prior</div>
+          <div style="font-size:13.5px;color:#cfccc2;line-height:1.5;flex:1;min-width:0;">DOT bond and DOT permit confirmed in hand</div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+<script>
+(function () {
+  const start = new Date(2026, 7, 24);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.max(0, Math.ceil((start - today) / 86400000));
+  document.getElementById('days-to-start').textContent = days + ' days out · holding';
+}());
+</script>
+</body>
+</html>
